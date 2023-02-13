@@ -3,10 +3,10 @@ import { useState,useMemo, useCallback, useEffect } from "react";
 import styles from "./index.module.css";
 
 const settings = {
-  questionerName: "敖骏杰", // 提问者名称
-  sampleQuestion: "What are you?", // 问题示例
+  questionerName: "John", // 提问者名称
+  sampleQuestion: "Are you happy?", // 问题示例
   chatGPTRoleName: "ChatGPT", // ChatGPT回答角色名称
-  sampleAnswer: "I am human.", // 回答示例
+  sampleAnswer: "Not realy, but still fine with me?", // 回答示例
 }
 
 export default function Home() {
@@ -169,28 +169,40 @@ export default function Home() {
 
   // 提问
   const onSubmit2 = async () => {
-    // 获取个性化配置（提问者，回答者名称等）
-    const { questionerName } = settings;
-    // 问题为空，返回
-    if(!question) return;
-    // 创建一个问答
-    completions.push({question:`${questionerName?`${questionerName}: `:""}${question}`,answer:[]});
-    setCompletions(completions);
-    // 循环请求OpenAI所有回答
-    const requestPrompt = getPromptForm() + prompt + `${questionerName?`${questionerName}: `:""}` + question;
-    const res = await makeRequest(requestPrompt);
-    // 组成新的Prompt
-    const newPrompt = setCompletionsToPrompt(res);
-    // 重置Prompt给下一次提问准备
-    setPrompt(newPrompt);
-    console.log({newPrompt,res});
+    try {
+      setLoading(true);
+      // 获取个性化配置（提问者，回答者名称等）
+      const { questionerName } = settings;
+      // 问题为空，返回
+      if(!question) return;
+      // 创建一个问答
+      completions.push({question:`${questionerName?`${questionerName}: `:""}${question}`,answer:[]});
+      setCompletions(completions);
+      // 循环请求OpenAI所有回答
+      const requestPrompt = getPromptForm() + prompt + `${questionerName?`${questionerName}: `:""}` + question;
+      // 清空输入框
+      setQuestion("");
+      const res = await makeRequest(requestPrompt);
+      // 组成新的Prompt
+      const newPrompt = setCompletionsToPrompt(res);
+      // 重置Prompt给下一次提问准备
+      setPrompt(newPrompt);
+      console.log({newPrompt,res});
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+    
   }
   
   // 合并回答断句
   const combindAnsers = (answers) => {
     let answer = "";
     answers && answers.length>0 && answers.map(v=>{answer+=v});
-    return answer.replace('\n','');
+    // const answerArr = answer.split(': ')[1];
+    // console.log(answerArr);
+    return answer.replace('\n\n','');
   }
 
   return (
@@ -233,11 +245,17 @@ export default function Home() {
                 <div className={styles.completions} key={`completion-${i}`}>
                   <div className={styles.questions}>
                     <div className={styles.headimg}>{settings.questionerName?settings.questionerName[0].toUpperCase():''}</div>
-                    <div className={styles.content}>{v.question}</div>
+                    <div className={styles.contentWrap}>
+                      <div className={styles.userName}>{settings.questionerName}</div>
+                      <div className={styles.content}>{v.question.split(': ')[1]}</div>
+                    </div>
                   </div>
                   <div className={styles.answers}>
                     <div className={styles.headimg}>{settings.chatGPTRoleName?settings.chatGPTRoleName[0].toUpperCase():''}</div>
-                    <div className={styles.content}>{combindAnsers(v.answer)}</div>
+                    <div className={styles.contentWrap}>
+                      <div className={styles.userName}>{settings.chatGPTRoleName}</div>
+                      <div className={styles.content}>{combindAnsers(v.answer)}</div>
+                    </div>
                   </div>
                 </div>
               ))

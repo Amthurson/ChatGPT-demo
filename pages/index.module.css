@@ -31,11 +31,12 @@
 }
 .main h3 {
   font-size: 24px;
-  width: 80vw;
+  width: 100%;
+  max-width: 500px;
   line-height: 40px;
   font-weight: bold;
   color: #202123;
-  margin: 16px 0 40px;
+  margin: 20px 0 16px;
 }
 .main form {
   display: flex;
@@ -101,7 +102,7 @@
   justify-content: flex-start;
   align-items: center; 
   width: 80vw;
-  max-width: 80vw;
+  max-width: 500px;
   min-width: 200px;
   height: 50vh;
   min-height: 600px;
@@ -112,6 +113,7 @@
   background-color: #434343;
   box-shadow: 0 0 5px rgba(0,0,0,0.3);
   outline: #a4e5ff;
+  overflow-y: scroll;
 }
 .main .dialog .dialogWrap:hover {
   outline: #a4e5ff;
@@ -158,20 +160,41 @@
   box-shadow: 0 0 5px rgba(0,0,0,0.5);
   margin-right: 12px;
   color: #2460da;
+  user-select: none;
 }
 .main .dialog .dialogWrap .completions .answers .headimg{
   margin-left: 12px;
   margin-right: 0px;
   color: #26a86b;
-}
-.main .dialog .dialogWrap .completions .questions .content,
-.main .dialog .dialogWrap .completions .answers .content {
+}.main .dialog .dialogWrap .completions .questions .contentWrap,
+.main .dialog .dialogWrap .completions .answers .contentWrap {
   width: 100%;
-  font-size: 18px;
-  text-align:left;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  align-items: flex-start;
 }
-.main .dialog .dialogWrap .completions .answers .content {
-  text-align:left;
+.main .dialog .dialogWrap .completions .answers .contentWrap {
+  align-items: flex-end;
+}
+.main .dialog .dialogWrap .completions .questions .contentWrap .userName,
+.main .dialog .dialogWrap .completions .answers .contentWrap .userName {
+  font-size: 14px;
+  color: #c8c8c8;
+}
+.main .dialog .dialogWrap .completions .questions .contentWrap .content,
+.main .dialog .dialogWrap .completions .answers .contentWrap .content {
+  width: fit-content;
+  max-width: 90%;
+  font-size: 17px;
+  text-align:justify;
+  background-color: #242424de;
+  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+  padding: 5px 8px;
+  border-radius: 8px;
+}
+.main .dialog .dialogWrap .completions .answers .contentWrap .content {
+  text-align:justify;
 }
 .main .dialog .inputWrap {
   width: 100%;
@@ -217,4 +240,33 @@
 .main .dialog .inputWrap .button:hover {
   transition: all 0.2s ease-in-out;
   filter: brightness(1.2);
+}
+/*滚动条样式*/
+.main *::-webkit-scrollbar {
+	width: 4px;
+	height: 4px;
+}
+.main *::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+	background: rgb(49, 167, 213);
+}
+
+.main *::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+	border-radius: 0;
+	background: rgba(61, 61, 61, 0.2);
+}
+.main *::-webkit-resizer {
+	background: rgba(61, 61, 61, 0.2);
+}
+.main *::-webkit-scrollbar-button {
+	background: rgba(61, 61, 61, 0.2);
+	width: 0;
+	height: 0;
+}
+.main *::-webkit-scrollbar-corner {
+	background: rgba(61, 61, 61, 0.2);
+	width: 0;
+	height: 0;
 }
